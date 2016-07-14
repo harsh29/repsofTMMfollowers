@@ -1,0 +1,327 @@
+//----->test<-----
+using Ivory.Container.Stack;
+using Ivory.IO;
+using Ivory.Type;
+using Ivory.Iterator;
+using test;
+using part2;
+
+public class Arrow
+{
+	public int i;
+	public string str;
+	public final string a = "abc";
+	public constructor initialize (int ii, string stri)
+	{
+		this.i = ii;
+		this.str = stri;
+	}
+	public void add(...a)
+	{
+		object[] b = a;
+		int i, ret = (int)b[0];
+		//b.add((object)1233);
+		print(ret);
+		for (i = 1; i < b.size(); i++)
+		{
+			ret += (int)b[i];
+			print(" + " + (int)b[i]);
+		}
+		print(" = " + ret);
+	}
+}
+
+void RUNNING_BLOCK1()
+{
+	Arrow a = new Arrow(110, "hello, world!");
+	object[] os = { (object)a, (object)a };
+	os.add((object)a);
+	println("BLOCK1" + glue + ((Arrow)os[0]).i + glue + ((Arrow)os[0]).str);
+	//println(j.size());
+}
+
+delegate int func(int i, int j);
+int func1(int i, int j) {
+	return i + j * i - j + i * i + j * j + ((j - i) - j * j) * (i - j);
+}
+
+void RUNNING_BLOCK2()
+{
+	func f1 = func1;
+	object o1 = f1;
+
+	func f2 = (func)o1;
+	int i = f2(1, 100);
+    println("BLOCK2" + glue + i);
+}
+
+void RUNNING_BLOCK3()
+{
+    var orig = { 3.1415l, 2.7182, 0.61803 };
+	int[] i = { (int)orig[0], (int)orig[1], (int)orig[2] };
+    double[] d = { (double)i[0], (double)i[1], (double)i[2] };
+    string[] str = { (string)(int)d[0], (string)(int)d[1], (string)(int)d[2] };
+    object[] o = { (object)(double)i[0], (object)(double)i[1], (object)(double)i[2] };
+    println("BLOCK3" + glue + orig[0] + glue + i[1] + glue + d[2] + glue + str[1] + glue + (string)(double)o[0]);
+}
+
+void RUNNING_BLOCK4()
+{
+    long double[] ld = { 0x13l, 0.00, 40.1 - 0.1, (1l / 20) * 20, 400 };
+	ld[0] = ld[0] % 20 + 1;
+	ld[1] = ld[1] + 20;
+	ld[2] = ld[2] - 20;
+	ld[3] = ld[3] * 20;
+	ld[4] = ld[4] / 20;
+    //object pi = ld;
+    //long double[] rec = (long double[])pi;
+    //long double = 3.14l;
+
+    print("BLOCK4");// + ld[0] + "->" + ld[1] + "->" + cd
+
+	int i;
+
+	for (i = 0; i < ld.size(); i++) {
+		print(glue + (long double)ld[i]);
+	}
+	println("");
+	/*if (true)
+	{
+		if (true) {if (true) {if (true) {if (true) {if (true) {if (true) {if (true) {if (true) {goto me;
+        }}}}}}}}
+	}*/
+	//var v = new Arrow(33, "hi");
+	//println(v.str);
+	//object o = "40";
+	//println((string)obj);
+}
+
+void RUNNING_BLOCK5()
+{
+	print("BLOCK5" + glue);
+	if (1 == 1):
+	if (2 == 2):
+	if (3 == 3):
+		print("Yes!" + glue);
+
+	var i = 0;
+[me]
+	i += 1;
+	switch(i) {
+		case 1:
+			[he]
+			print(i + glue);
+			goto me;
+		case 2:
+			[she]
+			print(i + glue);
+			goto he;
+		case 3:
+			[it]
+			print(i + glue);
+			goto she;
+		case 4:
+			print(i + glue);
+			goto it;
+	}
+	goto in_false;
+	if (false)
+	{
+		[in_false]
+		print("it's false!");
+	}
+	println("");
+}
+
+object multi_params(string wow, int fi, ...VAGS)
+{
+	print(VAGS.size());
+	print(glue + (string)VAGS[0]);
+	print(glue + (long double)VAGS[1]);
+	print(glue + (int)VAGS[2]);
+
+	print(glue + wow);
+	print(glue + fi);
+
+	VAGS.add("me");
+	print(glue + (string)VAGS[3]);
+
+	return 1;
+}
+
+void RUNNING_BLOCK6()
+{
+	int i = 3;
+
+	var iarray = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+	//content
+	var hello = "hello, world!";
+	var pi = 3.141592654;
+	var sp = 2;
+
+	print("BLOCK6" + glue);
+
+	int res;
+	object[] ii = new object[0];
+	for (i = 1; i <= 1000; i++) {
+		//is[i-1] = i;
+		ii.add((string)i);
+	} print("done!");
+	/*for (i = 0; i < is.size(); i++) {
+		res += (int)is[i];
+	}
+	print(" = " + res);*/
+
+	//(new Arrow(1,"me")).add(os);
+	println(glue + "7A6B8D013A88B8FACCB81BA98147706D");
+
+	/*multi_params("meeeee", 123, hello, pi, sp);*/
+	//println("");
+	//println(glue + (double)(int)(multi_params(hello, pi, sp)));
+
+	//pr(hello, pi);
+}
+
+void RUNNING_BLOCK7(int i)
+{
+	i += 10;
+	print("BLOCK7" + glue + i);
+
+	object o = (object)("1223");
+	println(glue + (string)o);
+}
+
+delegate int ADDER(bool if_print, ...);
+int adder_f(bool print, ...p)
+{
+	int i, res;
+	for (i = 0, res = 0; i < p.size(); i++):
+		res += (int)p[i];
+	if (print):;//print(res)
+	return res;
+}
+
+void RUNNING_BLOCK8()//delegate-object test
+{
+	ADDER a = adder_f;
+	object o1 = a;
+	print("BLOCK8");
+	print(glue + a(true, 1, 2, 3, 4, 5, 6, 7));
+	print(glue + ((ADDER)o1)(true, 1, 2, 3, 4, 5, 6, 7));
+	object o2 = o1;
+	print(glue + ((ADDER)o2)(true, 1, 2, 3, 4, 5, 6, 7));
+
+	println("");
+}
+
+void RUNNING_BLOCK9()
+{
+	print("BLOCK9");
+
+	Arrow a;
+	ADDER b;
+	native p;
+	int[] i = {1, 2};
+	object[] o = {(object)a, p};
+
+	print(glue + typeof(10).tostring());
+	print(glue + typeof(10.0).tostring());
+	print(glue + typeof(10.0l).tostring());
+	print(glue + typeof(o).tostring());
+	println("");
+	print(glue + typeof("str").tostring());
+	print(glue + typeof(a).tostring());
+	print(glue + typeof(b).tostring());
+	print(glue + glue + typeof(TypeID.ENUM_TYPE).tostring());
+	println("");
+	print(glue + typeof(null).tostring());
+	print(glue + typeof(p).tostring());
+
+	Type str = typeof("123");
+
+	println("");
+	print(glue + 20 + " is int --> " + 20 is int);
+	println("");
+	print(glue + 20.0 + " is int --> " + 20.0 is int);
+	println("");
+	print(glue + 20l + " is long double --> " + 20l is long double);
+	println("");
+	print(glue + "\"I'm a string\"" + " is string --> " + "\"I'm a string\"" is string);
+	println("");
+	print(glue + "typeof(\"I'm a string\")" + " is Type --> " + typeof("123") is Type);
+
+	if (typeof("123").type_id == typeof("456").type_id) {
+		println("");
+		print(glue + "pucha!\n");
+	}
+	if (__typeof((int){1, 2, 3}.iterator().next()) == int) {
+		print(glue + "haha!\n");
+	}
+
+	println("");
+	//str[0] = 123;
+	//println(str[0]);
+	//println(UPPER("asddd"));
+
+}
+
+void RUNNING_BLOCK10()//iterator test
+{
+	print("BLOCK10");
+	double[] ii = {1.23442, 11, 3.141592654, 333, 10, 100, 1000};
+	object res;
+	ArrayIterator ite;
+
+	for (ite = ii.iterator(); ite.hasNext();) {
+		ite.next();
+		res = ite.current();
+		print(glue + (double)res);
+	}
+
+	string[] sentence1 = {"Hello, ", "this ", "is ", "Mr.Lin."};
+	string[] sentence2 = {"I ", "am ", "very ", "angry."};
+	string[] sentence3 = {"I ", "failed ", "my ", "test."};
+	string[] sentence4 = {"Because ", "of ", "my ", "careless."};
+
+	string[][] sentences = { sentence1, sentence2, sentence3, sentence4 };
+	Iterator block = new ListIterator(sentences.iterator());
+	ArrayIterator ite_now;
+
+	try {
+		block.current();
+	} finally {
+		goto END;
+	}
+[END]
+
+	println("");
+	for (; block.hasNext();) {
+		print(glue);
+		for (ite_now = ((string[])(block.next())).iterator(); ite_now.hasNext();) {
+			print(ite_now.next());
+		}
+		println("");
+	}
+	println("");
+}
+
+println("-->test start<--\n");
+
+/* RUNNING... */
+RUNNING_BLOCK1();
+RUNNING_BLOCK2();
+RUNNING_BLOCK3();
+RUNNING_BLOCK4();
+RUNNING_BLOCK5();
+RUNNING_BLOCK6();
+int k = 10;
+RUNNING_BLOCK7(k);
+RUNNING_BLOCK8();
+RUNNING_BLOCK9();
+RUNNING_BLOCK10();
+RUNNING_BLOCK11();
+
+println("\n-->test end<--");
+print("press enter to exit...\n");
+//gets();

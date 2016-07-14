@@ -1,0 +1,87 @@
+.sc-cover-headline-1 {
+	font-size: 6em;
+	font-weight: 900;
+}
+
+.sc-cover-headline-2 {
+	font-size: 4em;
+	font-weight: 900;
+}
+
+.sc-cover-middle {
+	top: 25%;
+}
+
+.sc-cover-start-btn {
+	z-index: 1000;
+	position: fixed;
+	bottom: 0;
+	font-size: 2em;
+	color: #373737;
+	cursor: pointer;
+	text-align: center;
+
+	width: 100vw;
+	height: 3em;
+	line-height: 3em;
+
+	transition: color 0.3s;
+	-o-transition: color 0.3s;
+	-moz-transition: color 0.3s;
+	-ms-transition: color 0.3s;
+	-webkit-transition: color 0.3s;
+}
+
+.sc-cover-start-btn:hover {
+	color: #BEBEBE;
+}
+
+@media only screen and (max-height: 460px) {
+	.sc-cover-middle {
+		top: 20%;
+	}
+}
+
+@media only screen and (max-height: 360px) {
+	.sc-cover-middle {
+		top: 13%;
+	}
+
+	.sc-cover-headline-1 {
+		font-size: 4em;
+	}
+
+	.sc-cover-headline-2 {
+		font-size: 3em;
+	}
+}
+
+@media only screen and (max-width: 760px) {
+	.sc-cover-headline-1 {
+		font-size: 4em;
+	}
+
+	.sc-cover-headline-2 {
+		font-size: 3em;
+	}
+}
+
+@media only screen and (max-width: 450px) {
+	.sc-cover-headline-1 {
+		font-size: 3em;
+	}
+
+	.sc-cover-headline-2 {
+		font-size: 2.5em;
+	}
+}
+
+@media only screen and (max-width: 340px) {
+	.sc-cover-headline-1 {
+		font-size: 2em;
+	}
+
+	.sc-cover-headline-2 {
+		font-size: 2em;
+	}
+}

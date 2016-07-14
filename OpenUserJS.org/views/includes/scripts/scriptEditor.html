@@ -1,0 +1,63 @@
+<script type="text/javascript" charset="UTF-8" src="/redist/npm/ace-builds/src/ace.js"></script>
+<script type="text/javascript">
+  (function () {
+
+    $(document).ready(function () {
+      var editor = ace.edit("editor");
+
+      function hasRelative(aPrefix) {
+        var hasCalc = null;
+        var hasUnitV = null;
+
+        aPrefix = aPrefix || "";
+        hasCalc = document.createElement("div");
+        hasCalc.style.setProperty(aPrefix + "width", "calc(1px)", "");
+
+        if (!!hasCalc.style.length) {
+          hasUnitV = document.createElement("div");
+          hasUnitV.style.setProperty(aPrefix + "width", "calc(5vw + 5vw)", "");
+        }
+
+        return !!hasCalc.style.length && !!hasUnitV.style.length;
+      }
+
+      function hasOurRelative() {
+        return hasRelative("-moz-") || hasRelative("-ms-") || hasRelative("-o-") ||
+          hasRelative("-webkit-") || hasRelative();
+      }
+
+      function calcHeight() {
+        return window.innerHeight - {{#newScript}}190{{/newScript}}{{^newScript}}302{{/newScript}};
+      }
+
+      function onresize() {
+        $("#editor").height(calcHeight);
+        editor.resize(true);
+      }
+
+      editor.setTheme("ace/theme/dawn");
+      editor.getSession().setMode("ace/mode/javascript");
+
+      {{#readOnly}}editor.setReadOnly(true);{{/readOnly}}
+      {{^readOnly}}
+      // TODO: Submit using AJAX
+      $('#submit_code').click(function () {
+        $('#source').val(editor.getValue());
+        $('#code_form').submit();
+      });
+      {{/readOnly}}
+
+      // Some older and newer browser JavaScript work-around for #136
+      if (!hasOurRelative()) {
+        $("#editor").height(calcHeight());
+
+        if (window.addEventListener) {
+          window.addEventListener('resize', onresize, false);
+        } else if (window.attachEvent) {
+          window.attachEvent('resize', onresize);
+        }
+      }
+    });
+
+  })();
+</script>

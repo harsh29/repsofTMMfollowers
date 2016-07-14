@@ -1,0 +1,60 @@
+= Create an API
+:keywords: api, define, creator, create, raml
+
+This walkthrough requires API Creator permissions. If you don't have the necessary permissions, contact your administrator, or navigate to another part of the walkthrough.
+
+== Get Started
+
+In a separate browser, go into the Anypoint Platform for APIs link:https://anypoint.mulesoft.com[Anypoint Platform].
+
+Haven't signed up yet? Click *Sign up*:
+
+image:api-gw-sign-up.png[Anypoint Platform Sign up button]
+
+== Create an API in the Repository
+
+After signing in to Anypoint Platform for APIs, follow these steps to create a new API in the platform. This process creates an administrative command center for your API from which you can perform many other actions in the platform.
+
+. Click *APIs*.
++
+image:api-gateway-apis.png[api-gateway-apis]
++
+When you sign in as a member of the API Creator role and click *APIs*, you see your organization's API administration page, which may or may not have APIs in it already. This page displays all APIs and all versions of those APIs that you are authorized to see with your account. If you are directed to your organization's Developer Portal instead, contact your Organization Administrator and ask to be added to the API Creator role so that you can complete this walkthrough.
++
+. Click *Add new API*.
++
+image:api-platform-add-new-api2.png[api-platform-add-new-api2]
++
+[WARNING]
+Can't see that button? Contact your Organization Administrator and ask to be added to the API Creator role. Or, if you aren't interested in creating or managing APIs, you can jump to another part of the walkthrough to learn how to link:/anypoint-platform-for-apis/walkthrough-intro-consume[Consume an API].
++
+. Enter a *name*, *version*, optional endpoint, and brief *description* of your API, as shown in the following table.
++
+image:AddAPI-w.png[AddAPI-w]
++
+[width="100%",cols="30,70",options="header",]
+|===
+|Field |Value
+|*Name* |T-Shirt Ordering Service
+|*Version* |1.0.development
+|*API endpoint* | Leave empty for now
+|*Description* |This API helps you order a free promotional T-Shirt from our warehouse
+|===
++
+. Click *Add*.
++
+The API version details page, which looks something like this, appears:
++
+image:api-def-portal-status.png[api-def-portal-status]
+
+Some controls on the API version details page might not be visible or accessible to you, depending on link:/release-notes/anypoint-platform-for-apis-release-notes[entitlements you purchased].
+
+== Next
+
+Assuming you created an administrative home for an API version, click *Define API in API Designer* to start your API design.
+
+== See Also
+
+* link:http://forums.mulesoft.com[MuleSoft's Forums]
+* link:https://www.mulesoft.com/support-and-services/mule-esb-support-license-subscription[MuleSoft Support]
+* mailto:support@mulesoft.com[Contact MuleSoft]

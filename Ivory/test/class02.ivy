@@ -1,0 +1,28 @@
+using Ivory.lang;
+
+abstract class Point1 {
+    double x;
+    double y;
+
+    virtual void print() {
+	println("x.." + this.x + ", y.." + this.y);
+    }
+    virtual constructor initialize(double x, double y) {
+	this.x = x;
+	this.y = y;
+    }
+}
+
+class Point2 : Point1 {
+    override void print() {
+	println("overrided: x.." + this.x + ", y.." + this.y);
+    }
+    override constructor initialize(double x, double y) {
+	this.x = x + 10;
+	this.y = y + 10;
+    }
+}
+
+Point1 p = new Point2(5, 10);
+
+p.print();

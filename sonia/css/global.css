@@ -1,0 +1,119 @@
+@import url(/fonts/raleway/css/raleway.css);
+@import url(/fonts/ubuntu/css/ubuntu.css);
+@import url(/fonts/source-code-pro/css/source-code-pro.css);
+
+*,
+*:after,
+*:before {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.clearfix:before,
+.clearfix:after {
+	content: '';
+	display: table;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+html {
+	background: #F5F5F5; //#FAFAFA;
+}
+
+body {
+	color: #404d5b;
+	font-weight: 500;
+	font-size: 1.05em;
+	font-family: 'Ubuntu', Arial, sans-serif;
+	margin: 0;
+}
+
+code {
+	font-family: 'Source Code Pro';
+}
+
+body.body--hidden {
+	overflow: hidden;
+}
+
+body.body--hidden .codrops-header,
+body.body--hidden .content--related {
+	opacity: 0;
+}
+
+.codrops-header,
+.content--related {
+	-webkit-transition: opacity 300ms ease-in-out;
+	transition: opacity 300ms ease-in-out;
+}
+
+a {
+	text-decoration: none;
+	color: #de6551;
+	outline: none;
+}
+
+a:hover,
+a:focus {
+	color: #808080;
+}
+
+h2 {
+	font-family: 'Ubuntu', Arial, sans-serif;
+}
+
+.hidden {
+	position: absolute;
+	overflow: hidden;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
+/* Content */
+.content {
+	padding: 1em 0 1em;
+}
+
+/* Related demos */
+.content--related {
+	font-weight: bold;
+	color: #D8DADB;
+	text-align: center;
+}
+
+.media-item {
+	display: inline-block;
+	padding: 1em;
+	vertical-align: top;
+	-webkit-transition: color .3s;
+	transition: color .3s;
+}
+
+.media-item__img {
+	max-width: 100%;
+	opacity: .3;
+	-webkit-transition: opacity .3s;
+	transition: opacity .3s;
+}
+
+.media-item:hover .media-item__img,
+.media-item:focus .media-item__img {
+	opacity: 1;
+}
+
+.media-item__title {
+	font-size: 1em;
+	margin: 0;
+	padding: .5em;
+}
+
+.wrapper {
+	overflow: auto;
+	width: 95%;
+	max-width: 1366px;
+	margin: 0 auto;
+}

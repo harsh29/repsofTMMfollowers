@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{title}}</title>
+  {{> includes/head.html }}
+  <style>
+    .script-metadata-definitions .list-group-item-heading code,
+    .panel code {
+      white-space: pre-line;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  {{> includes/header.html }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="col-md-4">
+          {{#newUserJS}}
+          <h2><i class="octicon octicon-key"></i> Script Metadata</h2>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <p>You may read about most UserScript metadata block keys on the <a href="http://wiki.greasespot.net/Metadata_Block">Greasespot wiki</a> and at the <a href="https://sourceforge.net/p/greasemonkey/wiki/Metadata_Block/">Greasemonkey on SourceForge wiki</a>. Some recommended ones are listed below with their respective metadata block names.</p>
+            </div>
+          </div>
+          <h3>UserScript Block</h3>
+          <div class="list-group script-metadata-definitions">
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@name My Script</code></h5>
+              <p class="list-group-item-text"><strong>Default non-localized is required.</strong> Last value is used.</p>
+            </div>
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@updateURL https://openuserjs.org/meta/{{#authedUser}}{{authedUser.name}}{{/authedUser}}{{^authedUser}}username{{/authedUser}}/My_Script.meta.js</code></h5>
+              <p class="list-group-item-text"><strong>Required in lockdown mode.</strong> See <a href="/about/Frequently-Asked-Questions#q-does-openuserjs-org-have-meta-">this FAQ item</a> for more. Last value is used.</p>
+            </div>
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@description This script even does the laundry!</code></h5>
+              <p class="list-group-item-text">Specially formatted on the script page. Last value shown.</p>
+            </div>
+
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@copyright Year, Author (Author Website)</code></h5>
+              <p class="list-group-item-text">Specially formatted on the script page. All values shown in reverse order.</p>
+            </div>
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@icon url</code></h5>
+              <p class="list-group-item-text">A url or data url. Resolution should be near 48px by 48px, Used in the script list page at 16px and on the script page at ~45px. Last value is shown.</p>
+            </div>
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@license License Type; License Homepage</code></h5>
+              <p class="list-group-item-text">Specially formatted on the script page. All values shown in reverse order. If absent MIT License (Expat) is implied. See <a href="/about/Terms-of-Service#licensing">licensing terms</a> for specifics.</p>
+            </div>
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@homepageURL url</code></h5>
+              <p class="list-group-item-text">A url of http, https or mailto protocol. Specially formatted on the script page. All values shown in reverse order.</p>
+            </div>
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@supportURL url</code></h5>
+              <p class="list-group-item-text">A url of http, https or mailto protocol. Specially formatted on the script page. Last value shown.</p>
+            </div>
+          </div>
+          <h3>OpenUserJS Block</h3>
+          <div class="list-group script-metadata-definitions">
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@author {{#authedUser}}{{authedUser.name}}{{/authedUser}}{{^authedUser}}username{{/authedUser}}</code></h5>
+              <p class="list-group-item-text">The author of the script. Required to enable <a href="#collaboration">Collaboration</a>. Last value shown.</p>
+            </div>
+            <div class="list-group-item">
+              <h5 class="list-group-item-heading"><code>@collaborator username</code></h5>
+              <p class="list-group-item-text">May be defined multiple times. Required for <a href="#collaboration">Collaboration</a>. All values shown in reverse order.</p>
+            </div>
+          </div>
+          {{/newUserJS}}
+          {{#newJSLibrary}}
+          <h2><i class="fa fa-question"></i> Library Docs</h2>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3>OpenUserJS.org Supported</h3>
+              <p>Any UserScript on OpenUserJS.org that <code>// @require</code>'s libraries from OpenUserJS.org will link to the library on the UserScript page.</p>
+            </div>
+          </div>
+          {{/newJSLibrary}}
+        </div>
+        <div class="col-md-4">
+          <h2><i class="fa fa-plus-square"></i> New Script</h2>
+          <div class="list-group">
+            <a href="/about/Userscript-Beginners-HOWTO" class="list-group-item">
+              <h4 class="list-group-item-heading"><i class="fa fa-fw fa-book"></i> UserScript Beginners HOWTO</h4>
+              <p class="list-group-item-text">
+                Are you new to {{#newJSLibrary}}library {{/newJSLibrary}}{{^newJSLibrary}}user {{/newJSLibrary}} scripting and thought you would just dive right in without reading anything? Well if you change your mind check out some of our documentation by clicking here. Special thanks go out to all of our collaborators for all their dedication and effort.
+              </p>
+            </a>
+            <a href="{{{newScriptEditorPageUrl}}}" class="list-group-item">
+              <h4 class="list-group-item-heading"><i class="octicon octicon-fw octicon-pencil"></i> Write Script Online</h4>
+              <p class="list-group-item-text">
+                Click here to write a script using the Ace editor <em>(used by GitHub)</em>.
+              </p>
+            </a>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading"><i class="fa fa-fw fa-upload"></i> Upload Script</h4>
+              <p class="list-group-item-text">
+                <form action="{{{uploadNewScriptPageUrl}}}" method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <input type="hidden" name="uploadScript" value="true">
+                  {{#newJSLibrary}}
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="script_name" placeholder="Script Name" required="required" />
+                  </div>
+                  {{/newJSLibrary}}
+                  <div class="form-group">
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <span class="btn btn-primary btn-file">
+                          Browse...
+                          <input type="file" name="script" required="required" />
+                        </span>
+                      </span>
+                      <input type="text" readonly="readonly" class="form-control" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">Submit</button>
+                      </span>
+                    </div>
+                    <noscript>
+                      <div role="alert" class="alert alert-warning small">
+                        <i class="fa fa-exclamation-triangle"></i> <strong>JavaScript DISABLED</strong>: No file selection feedback will be given.
+                      </div>
+                    </noscript>
+                  </div>
+                </form>
+              </p>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading"><i class="octicon octicon-fw octicon-repo-forked"></i> Fork An Existing Script</h4>
+              <p class="list-group-item-text">
+                While logged in view a script's source and click "Submit Code as Fork".
+              </p>
+            </div>
+            <a href="{{{authedUser.userGitHubRepoListPageUrl}}}" class="list-group-item">
+              <h4 class="list-group-item-heading"><i class="octicon octicon-fw octicon-repo-clone"></i> Import Script from GitHub</h4>
+              <p class="list-group-item-text">
+                Click here to import a script<em>(s)</em> from a GitHub repository. If Sync Script has already been set up for the selected repository then it should automatically be linked for any scripts imported.
+              </p>
+            </a>
+            <div role="alert" class="alert alert-info">
+              <i class="fa fa-fw fa-info-circle"></i> <strong>LIMITS</strong>: The current transfer size limit is set at <span class="label label-default">{{maximumUploadScriptSize}} bytes</span> per script.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h2><i class="fa fa-refresh"></i> Sync Script</h2>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3><i class="octicon octicon-mark-github"></i> GitHub</h3>
+              <p>You may add a webhook to one or more of your GitHub repositories to automatically keep it up to date on OpenUserJS.org.</p>
+              <h4>Instructions</h4>
+              <p>Optionally you may upload the script to the site first. You may also use <a href="{{{authedUser.userGitHubRepoListPageUrl}}}">Import from Github</a> to speed things up as a shortcut.</p>
+              <ol>
+                <li>On your target GitHub repo, click Settings &gt; Webhooks &amp; Services &gt; Add Webhook.</li>
+                <li>In the Payload URL input, paste<br /><code>https://openuserjs.org/github/hook</code></li>
+                <li>Change the Content Type dropdown to<br /><code>application/x-www-form-urlencoded</code></li>
+                <li>Click <code>Add Webhook</code>.</li>
+              </ol>
+              <p>After adding the webhook, push a change to GitHub to make sure it's working.</p>
+            </div>
+          </div>
+
+          {{#newUserJS}}
+          <a name="collaboration"></a>
+          <h3>Collaboration</h3>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <p>To allow other users to upload modified versions of your script to your account from this site create an OpenUserJS metadata block and add the necessary keys... one for you yourself and for every existing user you wish to give write access as demonstrated here:<pre><code>// ==OpenUserJS==</code><br /><code>// @author {{#authedUser}}{{authedUser.name}}{{/authedUser}}{{^authedUser}}username{{/authedUser}}</code><br /><code>// @collaborator username</code><br /><code>// ==/OpenUserJS==</code></pre> Only the real author of the script may modify these metadata keys.</p>
+              <p>Collaborators on this site may not use GitHub integration to update the script. Add them as collaborators to the GitHub repository instead.</p>
+              <p>If the webhook is enabled on the GitHub repository it will clobber any changes here on this site.</p>
+            </div>
+          </div>
+          {{/newUserJS}}
+
+        </div>
+      </div>
+    </div>
+  </div>
+  {{> includes/footer.html }}
+  {{> includes/scripts/browseFeedback.html }}
+</body>
+</html>

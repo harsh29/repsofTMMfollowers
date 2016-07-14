@@ -1,0 +1,10 @@
+@font-face {
+	font-family: 'Source Code Pro';
+	src: url('/fonts/source-code-pro/fonts/sourcecodepro-regular-webfont.eot');
+	src: url('/fonts/source-code-pro/fonts/sourcecodepro-regular-webfont.eot?#iefix') format('embedded-opentype'),
+			 url('/fonts/source-code-pro/fonts/sourcecodepro-regular-webfont.woff') format('woff'),
+			 url('/fonts/source-code-pro/fonts/sourcecodepro-regular-webfont.ttf') format('truetype'),
+			 url('/fonts/source-code-pro/fonts/sourcecodepro-regular-webfont.svg#sourcecodepro') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

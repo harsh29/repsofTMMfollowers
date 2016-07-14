@@ -1,0 +1,27 @@
+using Ivory.lang;
+
+native __fopen(string file_name, string mode);
+string __fgets(native fp);
+void __fputs(string str, native fp);
+void __fclose(native fp);
+
+File fopen(string file_name, string mode) {
+    native fp = __fopen(file_name, mode);
+    if (fp == null) {
+	return null;
+    } else {
+	return new File(fp);
+    }
+}
+
+string fgets(File file) {
+    return __fgets(file.fp);
+}
+
+void fputs(string str, File file) {
+    __fputs(str, file.fp);
+}
+
+void fclose(File file) {
+    __fclose(file.fp);
+}

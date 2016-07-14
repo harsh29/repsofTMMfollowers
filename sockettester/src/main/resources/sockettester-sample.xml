@@ -1,0 +1,11 @@
+<environments>
+	<emails>brunocvcunha@gmail.com</emails>
+	<environment>
+		<host>github.com</host>
+		<port>80</port>
+		<description>Github</description>
+		<service>
+		</service>
+		<type>HTTP</type>
+	</environment>
+</environments>

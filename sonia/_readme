@@ -1,0 +1,82 @@
+# This document is about how to build an environment for inleak
+# Only used for linux
+
+# 1. Install LAMP environment
+bash:
+	sudo apt-get install lamp-server^
+
+# 2. Configure LAMP
+bash:
+	cd /etc/apache2/sites-available
+	sudo cp 000-default.conf inleak.conf
+	sudo vim inleak.conf # Change DocumentRoot
+	sudo a2dissite 000-default.conf && sudo a2ensite inleak.conf
+	sudo vim /etc/apache2/apache2.conf
+####################### change
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Require all denied
+</Directory>
+
+<Directory /usr/share>
+        AllowOverride None
+        Require all granted
+</Directory>
+
+<Directory /var/www/>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+</Directory>
+
+####################### into
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    allow from all
+</Directory>
+
+<Directory /usr/share>
+        AllowOverride None
+        Require all granted
+</Directory>
+
+<Directory /var/www/>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        allow from all
+</Directory>
+####################### end
+	sudo vim /etc/php5/apache2/php.ini # add prepend file
+	sudo service apache2 reload
+	sudo chmod 777 /var/www
+
+# 3. Create database environment
+
+CREATE DATABASE inleak;
+CREATE TABLE `inleak`.`users` (
+	`user_name` VARCHAR(32) NOT NULL ,
+	`nick_name` VARCHAR(64) NOT NULL ,
+	`password` VARCHAR(32) NOT NULL COMMENT 'md532u' ,
+	`group_id` INT(4) NOT NULL ,
+	`session_id` VARCHAR(32) NOT NULL,
+	`time_stamp` int unsigned,
+	`icon` varchar(32) COMMENT 'icon hadle',
+	`self_intro` varchar(170),
+	`contribution` varchar(4096),
+	`like` varchar(4096),
+	`message` TEXT NOT NULL
+) ENGINE = InnoDB;
+
+CREATE TABLE `inleak`.`config` (
+	`copy_right` VARCHAR(256) NOT NULL COMMENT 'foot'
+) ENGINE = InnoDB;
+
+CREATE TABLE `inleak`.`entry` (
+	`id` INT(10) NOT NULL ,
+	`like` TEXT NOT NULL,
+	`comments` TEXT NOT NULL
+) ENGINE = InnoDB;

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{title}}</title>
+  {{> includes/head.html }}
+</head>
+<body>
+  {{> includes/header.html }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2 class="page-heading">
+          <a href="{{{group.groupPageUrl}}}" class="script-name">{{group.name}}</a>
+        </h2>
+        {{#paginationRendered}}
+        <div class="text-center collapse">
+          {{{paginationRendered}}}
+        </div>
+        {{/paginationRendered}}
+        <div class="panel panel-default">
+          {{> includes/scriptList.html }}
+        </div>
+        {{#paginationRendered}}
+        <div class="text-center">
+          {{{paginationRendered}}}
+        </div>
+        {{/paginationRendered}}
+      </div>
+      <div class="col-sm-4">
+        {{> includes/searchBarPanel.html }}
+        {{> includes/popularGroupsPanel.html }}
+        {{> includes/groupAdminToolsPanel.html }}
+      </div>
+    </div>
+  </div>
+  {{> includes/footer.html }}
+  {{> includes/scripts/tableTrLinkScript.html }}
+  {{#paginationRendered}}
+    {{> includes/scripts/showTopPagination.html }}
+  {{/paginationRendered}}
+  {{> includes/scripts/lazyIconScript.html }}
+</body>
+</html>

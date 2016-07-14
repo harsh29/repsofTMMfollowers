@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <ul class="nav nav-pills nav-justified">
+      <li>
+        <div class="text-center">
+        {{#flagged}}
+          <form action="{{{user.userFlagPageUrl}}}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="flag" value="false">
+            <button class="btn btn-link" type="submit" class="{{^canFlag}} disabled{{/canFlag}}"><i class="fa fa-fw fa-flag"></i> Unflag</button>
+          </form>
+        {{/flagged}}
+        {{^flagged}}
+          <a rel="nofollow" href="#" data-toggle="modal" data-target="#flagUserModal" class="{{^canFlag}}disabled{{/canFlag}}"><i class="fa fa-flag-o"></i> Flag</a>
+        {{/flagged}}
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

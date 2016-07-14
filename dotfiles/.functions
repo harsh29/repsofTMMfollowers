@@ -1,0 +1,1016 @@
+#!/bin/bash
+
+
+
+## Fix prompt and title function
+function fixprompt() {
+  #tab title with the current folder name
+  export PROMPT_COMMAND='echo -ne "\033]0; ${PWD##*/}\007"'
+  export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
+}
+
+## Progress
+function echo_progress() {
+  echo -e "`mytimestamp` - ${*}"
+}
+
+## Success
+function echo_success() {
+  echo -e "$GREEN`mytimestamp` - ${*}${NOCOLOR}"
+}
+
+## Failure
+function echo_failure() {
+  echo -e "$RED`mytimestamp` - ${*}${NOCOLOR}"
+}
+
+
+# Simple calculator
+function calc() {
+  local result="";
+  result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')";
+  #                       └─ default (when `--mathlib` is used) is 20
+  #
+  if [[ "$result" == *.* ]]; then
+    # improve the output for decimal numbers
+    printf "$result" |
+    sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
+        -e 's/^-\./-0./'      `# add "0" for cases like "-.5"`\
+        -e 's/0*$//;s/\.$//';  # remove trailing zeros
+  else
+    printf "$result";
+  fi;
+  printf "\n";
+}
+
+# Reload Chrome via OSA
+# more info: https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html
+function reload-chrome() {
+  osascript -e '
+  tell application "Google Chrome"
+      tell the active tab of its first window
+          reload
+      end tell
+  end tell
+  '
+}
+
+
+
+# Word frequency
+function wordFreq() {
+  ruby -F'[^a-zA-Z]+' -ane '
+      BEGIN   { $words = Hash.new(0) }
+      $F.each { |word| $words[word.downcase] += 1 }
+      END     { $words.each { |word, i| printf "%3d %s\n", i, word } }
+  ' | sort -rn
+
+}
+
+# Change the bash title
+function title {
+    if [ "$1" ]
+    then
+        unset PROMPT_COMMAND
+        echo -ne "\033]0;${*}\007"
+    else
+        export PROMPT_COMMAND='echo -ne "\033]0;${PWD/#$HOME/~}\007"'
+    fi
+}
+
+# get a random word from the system dictionary.
+function randomWord() {
+  resource=/usr/share/dict/words;
+  lineNum=$(cat $resource | wc -l);
+  cat -n $resource | grep -w $(jot -r 1 1 $lineNum) | cut -f2;
+}
+
+#get a random line of a file
+function randomLine() {
+     randomFile="head -$((${RANDOM} % `wc -l < $1` + 1)) $1"
+     echo `$randomFile | tail -1`
+}
+
+# Create a new directory and enter it
+function mkd() {
+  mkdir -p "$@" && cd "$_";
+}
+
+# Pub key send
+function pubkeysend() {
+  ssh-copy-id -i ~/.ssh/id_rsa.pub $1
+}
+
+# SSH + CD
+function sshcd() {
+  ssh -t $1 "cd $2; bash"
+}
+
+# Search and Replace based on the params
+function srall {
+    find . -type f -exec sed -i '' s/$1/$2/g {} +
+}
+
+# Search and Replace based on params - with extension
+function srext {
+    find . -type f -name '*.$1' -exec sed -i '' s/$2/$3/g {} +
+}
+
+# Filter Specific column
+function col {
+  awk -v col=$1 '{print $col}'
+}
+
+# Skip X words in line
+function skip {
+    n=$(($1 + 1))
+    cut -d' ' -f$n-
+}
+
+# Change working directory to the top-most Finder window location
+function cdfinder() { # cdf
+  cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
+}
+
+# Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
+function targz() {
+  local tmpFile="${@%/}.tar";
+  tar -cvf "${tmpFile}" --exclude=".DS_Store" "${@}" || return 1;
+
+  size=$(
+    stat -f"%z" "${tmpFile}" 2> /dev/null; # OS X `stat`
+    stat -c"%s" "${tmpFile}" 2> /dev/null # GNU `stat`
+  );
+
+  local cmd="";
+  if (( size < 52428800 )) && hash zopfli 2> /dev/null; then
+    # the .tar file is smaller than 50 MB and Zopfli is available; use it
+    cmd="zopfli";
+  else
+    if hash pigz 2> /dev/null; then
+      cmd="pigz";
+    else
+      cmd="gzip";
+    fi;
+  fi;
+
+  echo "Compressing .tar using \`${cmd}\`…";
+  "${cmd}" -v "${tmpFile}" || return 1;
+  [ -f "${tmpFile}" ] && rm "${tmpFile}";
+  echo "${tmpFile}.gz created successfully.";
+}
+
+# Determine size of a file or total size of a directory
+function fs() {
+  if du -b /dev/null > /dev/null 2>&1; then
+    local arg=-sbh;
+  else
+    local arg=-sh;
+  fi
+  if [[ -n "$@" ]]; then
+    du $arg -- "$@";
+  else
+    du $arg .[^.]* ./*;
+  fi;
+}
+
+
+## find which pid is listening on port
+function portuse {
+  lsof -n -i4TCP:"$@" | grep LISTEN
+}
+
+# Use Git’s colored diff when available
+hash git &>/dev/null;
+if [ $? -eq 0 ]; then
+  function diff() {
+    git diff --no-index --color-words "$@";
+  }
+fi;
+
+# Create a data URL from a file
+function dataurl() {
+  local mimeType=$(file -b --mime-type "$1");
+  if [[ $mimeType == text/* ]]; then
+    mimeType="${mimeType};charset=utf-8";
+  fi
+  echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')";
+}
+
+# Create a git.io short URL
+function gitio() {
+  if [ -z "${1}" -o -z "${2}" ]; then
+    echo "Usage: \`gitio slug url\`";
+    return 1;
+  fi;
+  curl -i https://git.io/ -F "url=${2}" -F "code=${1}";
+}
+
+# Start an HTTP server from a directory, optionally specifying the port
+function pythonserver() {
+  local port="${1:-8000}";
+  sleep 1 && open "http://localhost:${port}/" &
+  # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+  # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+  python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port";
+}
+
+# Start a PHP server from a directory, optionally specifying the port
+# (Requires PHP 5.4.0+.)
+function phpserver() {
+  local port="${1:-4000}";
+  local ip=${2:-$(ipconfig getifaddr en0)};
+  sleep 1 && open "http://${ip}:${port}/" &
+  php -S "${ip}:${port}";
+}
+
+# Compare original and gzipped file size
+function gz() {
+  local origsize=$(wc -c < "$1");
+  local gzipsize=$(gzip -c "$1" | wc -c);
+  local ratio=$(echo "$gzipsize * 100 / $origsize" | bc -l);
+  printf "orig: %d bytes\n" "$origsize";
+  printf "gzip: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio";
+}
+
+# Syntax-highlight JSON strings or files
+# Usage: `json '{"foo":42}'` or `echo '{"foo":42}' | json`
+#python -c "import json,sys; print json.dumps(json.load(sys.stdin),indent=4,separators=(',',': '))"
+function json() {
+  jsonnocolor | pygmentize -l javascript;
+}
+function jsonnocolor() {
+  if [ -t 0 ]; then # argument
+    python -mjson.tool <<< "$*"
+  else # pipe
+    python -mjson.tool
+  fi;
+}
+
+
+# bsh
+function bsh() {
+  java -cp .:/usr/local/bin/bsh.jar bsh.Interpreter $*
+}
+function bshgui() {
+  java -cp .:/usr/local/bin/bsh.jar bsh.Interpreter $*
+}
+
+# xml format
+function xmlformat() {
+  xmllint --format -
+}
+
+
+
+# Trim spaces
+function trim () {
+  while read -r line; do echo "$line"; done;
+}
+
+# Run `dig` and display the most useful info
+function digga() {
+  dig +nocmd "$1" any +multiline +noall +answer;
+}
+
+# UTF-8-encode a string of Unicode symbols
+function escape() {
+  printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u);
+  # print a newline unless we’re piping the output to another program
+  if [ -t 1 ]; then
+    echo ""; # newline
+  fi;
+}
+
+# Decode \x{ABCD}-style Unicode escape sequences
+function unidecode() {
+  perl -e "binmode(STDOUT, ':utf8'); print \"$@\"";
+  # print a newline unless we’re piping the output to another program
+  if [ -t 1 ]; then
+    echo ""; # newline
+  fi;
+}
+
+# Get a character’s Unicode code point
+function codepoint() {
+  perl -e "use utf8; print sprintf('U+%04X', ord(\"$@\"))";
+  # print a newline unless we’re piping the output to another program
+  if [ -t 1 ]; then
+    echo ""; # newline
+  fi;
+}
+
+# Show all the names (CNs and SANs) listed in the SSL certificate
+# for a given domain
+function getcertnames() {
+  if [ -z "${1}" ]; then
+    echo "ERROR: No domain specified.";
+    return 1;
+  fi;
+
+  local domain="${1}";
+  echo "Testing ${domain}…";
+  echo ""; # newline
+
+  local tmp=$(echo -e "GET / HTTP/1.0\nEOT" \
+    | openssl s_client -connect "${domain}:443" -servername "${domain}" 2>&1);
+
+  if [[ "${tmp}" = *"-----BEGIN CERTIFICATE-----"* ]]; then
+    local certText=$(echo "${tmp}" \
+      | openssl x509 -text -certopt "no_aux, no_header, no_issuer, no_pubkey, \
+      no_serial, no_sigdump, no_signame, no_validity, no_version");
+    echo "Common Name:";
+    echo ""; # newline
+    echo "${certText}" | grep "Subject:" | sed -e "s/^.*CN=//" | sed -e "s/\/emailAddress=.*//";
+    echo ""; # newline
+    echo "Subject Alternative Name(s):";
+    echo ""; # newline
+    echo "${certText}" | grep -A 1 "Subject Alternative Name:" \
+      | sed -e "2s/DNS://g" -e "s/ //g" | tr "," "\n" | tail -n +2;
+    return 0;
+  else
+    echo "ERROR: Certificate not found.";
+    return 1;
+  fi;
+}
+
+# `s` with no arguments opens the current directory in Sublime Text, otherwise
+# opens the given location
+function s() {
+  if [ $# -eq 0 ]; then
+    subl .;
+  else
+    subl "$@";
+  fi;
+}
+
+# `a` with no arguments opens the current directory in Atom Editor, otherwise
+# opens the given location
+function a() {
+  if [ $# -eq 0 ]; then
+    atom .;
+  else
+    atom "$@";
+  fi;
+}
+
+# `v` with no arguments opens the current directory in Vim, otherwise opens the
+# given location
+function v() {
+  if [ $# -eq 0 ]; then
+    vim .;
+  else
+    vim "$@";
+  fi;
+}
+
+# `o` with no arguments opens the current directory, otherwise opens the given
+# location
+function o() {
+  if [ $# -eq 0 ]; then
+    open .;
+  else
+    open "$@";
+  fi;
+}
+
+# `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
+# the `.git` directory, listing directories first. The output gets piped into
+# `less` with options to preserve color and line numbers, unless the output is
+# small enough for one screen.
+function tre() {
+  tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}
+
+
+# whois a domain or a URL
+function whois() {
+  local domain=$(echo "$1" | awk -F/ '{print $3}') # get domain from URL
+  if [ -z $domain ] ; then
+    domain=$1
+  fi
+  echo "Getting whois record for: $domain …"
+
+  # avoid recursion
+          # this is the best whois server
+                          # strip extra fluff
+  /usr/bin/whois -h whois.internic.net $domain | sed '/NOTICE:/q'
+}
+
+
+# resolve IP of hosts
+function resolveip() {
+  ping -c 1 $1 | regex1 "PING.*\((.*)\):"
+}
+
+#get my remote ip
+# could use: ifconfig.me/ip
+function httpip() {
+  curl -sk http://ipinfo.io/ip
+}
+function httphost() {
+  curl -sk http://ifconfig.me/host
+}
+function httpua() {
+  curl http://httpbin.org/user-agent
+}
+function httpgetinfo() {
+  curl http://httpbin.org/get?show_env=1
+}
+
+function localip(){
+  function _localip(){ echo "📶 - "$(ipconfig getifaddr "$1"); }
+  export -f _localip
+  local purple="\x1B\[35m" reset="\x1B\[m"
+  networksetup -listallhardwareports | \
+    sed -r "s/Hardware Port: (.*)/${purple}\1${reset}/g" | \
+    sed -r "s/Device: (en.*)$/_localip \1/e" | \
+    sed -r "s/Ethernet Address:/📘 /g" | \
+    sed -r "s/(VLAN Configurations)|==*//g"
+}
+
+
+# Extract archives - use: extract <file>
+# Based on http://dotfiles.org/~pseup/.bashrc
+function extract() {
+  if [ -f "$1" ] ; then
+    local filename=$(basename "$1")
+    local foldername="${filename%%.*}"
+    local fullpath=`perl -e 'use Cwd "abs_path";print abs_path(shift)' "$1"`
+    local didfolderexist=false
+    if [ -d "$foldername" ]; then
+      didfolderexist=true
+      read -p "$foldername already exists, do you want to overwrite it? (y/n) " -n 1
+      echo
+      if [[ $REPLY =~ ^[Nn]$ ]]; then
+        return
+      fi
+    fi
+    mkdir -p "$foldername" && cd "$foldername"
+    case $1 in
+      *.tar.bz2) tar xjf "$fullpath" ;;
+      *.tar.gz) tar xzf "$fullpath" ;;
+      *.tar.xz) tar Jxvf "$fullpath" ;;
+      *.tar.Z) tar xzf "$fullpath" ;;
+      *.tar) tar xf "$fullpath" ;;
+      *.taz) tar xzf "$fullpath" ;;
+      *.tb2) tar xjf "$fullpath" ;;
+      *.tbz) tar xjf "$fullpath" ;;
+      *.tbz2) tar xjf "$fullpath" ;;
+      *.tgz) tar xzf "$fullpath" ;;
+      *.txz) tar Jxvf "$fullpath" ;;
+      *.rar) unrar x "$fullpath" ;;
+      *.zip) unzip "$fullpath" ;;
+      *) echo "'$1' cannot be extracted via extract()" && cd .. && ! $didfolderexist && rm -r "$foldername" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+
+
+
+
+# Add reminder to Reminders.app (OS X 10.8)
+# Usage: `remind 'foo'` or `echo 'foo' | remind`
+function remind () {
+  local text
+  if [ -t 0 ]; then
+    text="$1" # argument
+  else
+    text=$(cat) # pipe
+  fi
+  osascript >/dev/null <<EOF
+tell application "Reminders"
+  tell the default list
+    make new reminder with properties {name:"$text"}
+  end tell
+end tell
+EOF
+}
+
+# Add note to Notes.app (OS X 10.8)
+# Usage: `note 'title' 'body'` or `echo 'body' | note`
+# Title is optional
+function note () {
+  local title
+  local body
+  if [ -t 0 ]; then
+    title="$1"
+    body="$2"
+  else
+    title=$(cat)
+  fi
+  osascript >/dev/null <<EOF
+tell application "Notes"
+  tell account "iCloud"
+    tell folder "Notes"
+      make new note with properties {name:"$title", body:"$title" & "<br><br>" & "$body"}
+    end tell
+  end tell
+end tell
+EOF
+}
+
+
+# Top 10 BASH commands used
+# from stackoverflow.com/questions/68372/what-is-your-single-most-favorite-command-line-trick-using-bash#answer-68390
+function top10 () {
+    history | awk 'BEGIN {FS="[ \t]+|\\|"} {print $3}' | sort | uniq -c | sort -nr | head
+}
+
+# Copy w/ progress
+function cp_p () {
+  rsync -WavP --human-readable --progress $1 $2
+}
+
+
+
+# Read JSON Keys
+function jsonkeys() {
+  python -c $'
+import json,sys;
+obj=json.load(sys.stdin);
+
+for each in obj.keys():
+    print "%s" % (each)
+';
+}
+
+
+# Read JSON Tag
+function jsontag() {
+  python -c $'
+import json,sys;
+obj=json.load(sys.stdin);
+result=obj["'"$1"'"];
+
+if isinstance(result, unicode):
+  print result;
+else:
+  print json.dumps(result, indent=4);
+  ';
+}
+
+# Read JSON Index
+function jsonindex() {
+  python -c $'
+import json,sys;
+obj=json.load(sys.stdin);
+result=obj['"$1"'];
+
+if isinstance(result, unicode):
+  print result;
+else:
+  print json.dumps(result, indent=4);
+  ';
+}
+
+
+# Read JSON Val in Array
+function jsonarrayval() {
+  python -c $'
+import json,sys;
+obj=json.load(sys.stdin);
+
+for inst in (item for item in obj):
+  if "'$1'" in inst:
+    result = inst["'$1'"]
+    if isinstance(result, unicode):
+      print result;
+    else:
+      print json.dumps(result, indent=4);
+  ';
+}
+
+function paramtest() {
+echo "First: $1";
+echo "Second: ${*:2}";
+
+}
+
+#Get my timestamp
+function mytimestamp() {
+  date +"%Y-%m-%d %T"
+}
+
+
+#Requote
+#https://stackoverflow.com/questions/3260920/preserving-quotes-in-bash-function-parameters
+function requote() {
+  local res=""
+  for x in "${@}" ; do
+    # try to figure out if quoting was required for the $x:
+    grep -q "[[:space:]]" <<< "$x" && res="${res} '${x}'" || res="${res} ${x}"
+  done
+  # remove first space and print:
+  sed -e 's/^ //' <<< "${res}"
+}
+
+#Build Jenkins and wait until finished
+function jenkinsbuildandwait() {
+
+  echo "`mytimestamp` - Building $1";
+
+
+  if [ $# -eq 2 ]; then
+    curl -v -X POST "$1/build?delay=0sec" -H 'Content-Type: application/x-www-form-urlencoded' --data "$2"
+  else
+    curl -v -X POST "$1/buildWithParameters"
+  fi
+
+  jenkinswaitforbuild "$1/lastBuild"
+
+  echo "`mytimestamp` - Finished $1!";
+
+}
+
+# wait for build on jenkins
+function jenkinswaitforbuild() {
+
+  url="$1/api/json"
+  #echo "URL: $url"
+
+  sleep 10
+  lastBuildResult=$(curl -s "$url" | jsontag result)
+  while [ "$lastBuildResult" != "SUCCESS" ];
+  do
+    echo "`mytimestamp` - Waiting for $1 to complete (result: $lastBuildResult)";
+    sleep 10
+
+    lastBuildResult=$(curl -s "$url" | jsontag result)
+
+  done
+
+  if hash terminal-notifier 2> /dev/null; then
+    terminal-notifier -title "Jenkins Build" -message "Job '$1' was finished"
+  fi
+
+
+}
+
+#Random say voice
+function sayrandomvoice() {
+  declare -a expressions=('Agnes' 'Kathy' 'Princess' 'Vicki' 'Victoria' 'Alex' 'Bruce' 'Fred' 'Junior' 'Ralph' 'Albert' 'Bad News' 'Bahh' 'Bells' 'Boing' 'Bubbles' 'Cellos' 'Deranged' 'Good News' 'Hysterical' 'Pipe Organ' 'Trinoids' 'Whisper' 'Zarvox');
+  index=$( jot -r 1  0 $((${#expressions[@]} - 1)) )
+  say -v "${expressions[index]}" $*
+}
+
+
+## Echo Jump Dir
+function jecho() {
+
+  echo "$(j $* | nocolor)";
+
+}
+
+## No colors. :)
+function nocolor() {
+  sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" | sed "s/\x0f//g"
+}
+
+##kill processes with name
+function grepkill() {
+  if [ $# -ne 2 ]; then
+      echo_failure "usage: grepkill -SIG process" >&2
+      return;
+  fi
+
+    ps aux | grep -ie "$2" | grep -v "grep" | awk '{print $2}' | xargs kill $1
+}
+
+
+
+##sort by timestamp alphabetically
+function sortbytimestamp() {
+
+  for fi in `gls -1v | grep -v ".txt"`
+  do
+    echo "Touch $fi..."
+    touch $fi
+    sleep 0.2
+  done
+}
+
+
+# ScreenShot
+function ss() {
+  echo "[ss - press space to select rectangle]"
+  if [ "$1" != "" ]; then
+    screencapture -iW $*
+  else
+    #clipboard
+    screencapture -ciW
+  fi
+}
+
+# Dotfile Backup
+function dotbkp() {
+  if [ ! -d ~/Dropbox/dotfiles ]; then
+    echo "Not allowed in this machine."
+    return
+  fi
+
+  rsync -ruv --exclude '.git' ~/githubworkspace/dotfiles/ ~/Dropbox/dotfiles/
+  rm -rf ~/Dropbox/dotfiles/.git
+  scp ~/githubworkspace/dotfiles/.priv8functions bruno@currentremote:~/githubworkspace/dotfiles/
+  #scp ~/githubworkspace/dotfiles/.priv8functions bruno@california:~/githubworkspace/dotfiles/
+  #scp ~/githubworkspace/dotfiles/.priv8functions bruno@alphaeon:~/githubworkspace/dotfiles/
+  #scp ~/githubworkspace/dotfiles/.priv8functions bruno@bruno1:~/githubworkspace/dotfiles/
+
+}
+
+
+# Safari tools
+function safariurl() {
+  osascript -e 'tell application "Safari" to get URL of current tab of front window'
+}
+function safarisource() {
+  osascript -e 'tell application "Safari" to get source of current tab of front window'
+}
+function safaritext() {
+  osascript -e 'tell application "Safari" to get text of current tab of front window'
+}
+
+#Chrome tools
+function chromeurl() {
+  osascript -e 'tell app "Google Chrome" to URL of active tab of window 1'
+}
+
+# list selected finder files
+function finderselected() {
+  osascript <<EOT
+      tell application "Finder"
+          set theFiles to selection
+          set theList to ""
+          repeat with aFile in theFiles
+              set theList to theList & POSIX path of (aFile as alias) & "\n"
+          end repeat
+          theList
+      end tell
+EOT
+}
+
+
+
+
+function regex1 {
+  gawk 'match($0,/'"$1"'/, ary) { print ary['${2:-'1'}'] }';
+}
+
+
+
+# Colorize
+function logcolorize() {
+
+  SEDNOCOLOR="\o033[0m"    # unsets color to term's fg color
+  SEDRED='\o033[31m'        # Red
+  SEDGREEN='\o033[32m'      # Green
+  SEDYELLOW='\o033[33m'      # Yellow
+  SEDBLUE='\o033[34m'        # Blue
+
+  sed -e 's/\(.*\(INFO\|DEBUG\).*\)/'"$SEDBLUE"'\1'"$SEDNOCOLOR"'/' \
+    -e 's/\(.*WARN.*\)/'"$SEDYELLOW"'\1'"$SEDNOCOLOR"'/' \
+    -e 's/\(.*ERROR.*\)/'"$SEDRED"'\1'"$SEDNOCOLOR"'/' \
+    -e 's/\(.*SEVERE.*\)/'"$SEDRED"'\1'"$SEDNOCOLOR"'/' \
+    -e 's/\(.*at.*(\(.*:.*\|Native Method\)).*\)/'"$SEDRED"'\1'"$SEDNOCOLOR"'/'
+
+
+
+}
+
+## clean CURL request
+function cleancurlcb() {
+  pbpaste | cleancurl | pbcopy
+}
+
+
+## clean CURL request
+function cleancurl() {
+
+  #curl 'https://totvslabs.fluigdata.com:8443/api/v1/resultpanel/valuedist?pageSize=20&sortBy=value&sortOrder=DESC' -H 'Pragma: no-cache' -H 'Origin: http://totvslabs.fluigdata.com:3002' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36' -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept: application/json, text/plain, */*' -H 'Cache-Control: no-cache' -H 'Authorization: 454d6e002cf911e69ff182c16efcba4d' -H 'Connection: keep-alive' -H 'Referer: http://totvslabs.fluigdata.com:3002/' -H 'DNT: 1' --data-binary '[{"index":"STAGING","type":"d05a7b0ec55547e5feb0d5bcdff6cc34_customer","fields":["name","state"]}]' --compressed
+  perl -pe 's/-H '\''Pragma: .*?'\''//g' | \
+  perl -pe 's/-H '\''Origin: .*?'\''//g' | \
+  perl -pe 's/-H '\''User-Agent: .*?'\''//g' | \
+  perl -pe 's/-H '\''Accept-Encoding: .*?'\''//g' | \
+  perl -pe 's/-H '\''Accept-Language: .*?'\''//g' | \
+  perl -pe 's/-H '\''Referer: .*?'\''//g' | \
+  perl -pe 's/-H '\''Cache-Control: .*?'\''//g' | \
+  perl -pe 's/-H '\''Connection: .*?'\''//g'
+}
+
+
+
+## network tools - nmap (aroundme, aroundme 16)
+function aroundme() {
+  nmap -sP `mysubnet $*`
+}
+
+function aroundmemac() {
+  nmap -sP -n `mysubnet $*`
+}
+
+function aroundmeos() {
+  sudo nmap -O --osscan-guess `mysubnet $*`
+}
+
+function mysubnet() {
+  echo "`localip | cut -d"." -f1-3`.0/${1-24}"
+}
+
+
+# Removes elements from an array based on a given regex pattern.
+# Usage: filter_arr pattern array
+# Usage: filter_arr pattern element1 element2 ...
+#https://stackoverflow.com/questions/3578584/bash-how-to-delete-elements-from-an-array-based-on-a-pattern
+function filter_arr() {
+  arr=($@)
+  arr=(${arr[@]:1})
+  dirs=($(for i in ${arr[@]}
+    do echo $i
+  done | grep $1))
+  echo ${dirs[@]}
+}
+
+
+
+## Get protocol + host of an url
+function urlhost() {
+  perl -n -e 'm{(https?://[^/]+)(/[^?]+)};print $1 . "/"'
+}
+
+
+### brew formulas
+function brewformulas() {
+  for formulae in ${1:-~/githubworkspace/homebrew/Library/Formula/*};
+  do
+    filename=${formulae##*/}
+    formula=${filename%.*}
+
+    desc=$(cat $formulae| regex1 "desc \"(.*)\"")
+    head=$(cat $formulae| regex1 "head \"(.*)\"")
+    echo -e "$formula\t$head\t$desc"
+  done;
+}
+
+
+# Pipe From - print from specific pattern
+function pipefrom() {
+  sed -n '/'"$1"'/,$p'
+}
+
+
+# Convert whiteboard -- https://gist.github.com/lelandbatey/8677901
+function whiteboard() {
+  convert "$1" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "$2"
+}
+
+function __git_dirty {
+  git diff --quiet HEAD &>/dev/null
+  [ $? == 1 ] && echo "!"
+}
+
+
+# best chess move by FEN
+function chessbestmove() {
+  curl -s -XPUT 'http://www.chess-hub.com/moves/calculate' -H 'Content-Type: application/x-www-form-urlencoded' --data "fen%5Bfull_string%5D=$*"  | grep "The best move is" | cut -d'>' -f 5 | cut -d'<' -f 1
+}
+
+# get fen from game
+function chessfen() {
+  gameResponse=$(curl -s $1)
+  fen=$(curl -s $1 | pup 'div.moveactions input attr{value}')
+  echo $fen
+}
+# get chess.com best move -- using ID
+function chessmove() {
+  bestMove=$(chessbestmove `chessfen $1`)
+
+  if [[ $@ == *'-s'* ]]; then
+    echo "$(chessbestmove $fen)"
+  else
+    echo "Game URL: $1, FEN: '$fen', Best Move: $(chessbestmove $fen)"
+  fi
+
+
+}
+
+# pull latest and print status
+function gitpullandstatus() {
+  (
+
+    echo_progress "________________________________________"
+    cd $1
+
+    currentBranch=$(mybranch)
+    if [ $? -eq 0 ]
+    then
+      echo_progress "Updating ${1}... Current branch: ${currentBranch}. Pending changes: $(mybranchpending)"
+
+      if [ $# -eq 2 ] && [ "$currentBranch" != "$2" ]; then
+        git checkout $2
+      fi
+
+      echo_progress "`git fetch`"
+      echo_progress "`git pull`"
+      echo_progress "`git status`"
+    else
+      echo_progress "Not updating ${1} - cd failed."
+    fi
+
+
+  )
+}
+
+
+
+function chromecookies() {
+  # The path for MAC!
+  CHROME="${HOME}/Library/Application Support/Google/Chrome/Default"
+  #echo $CHROME
+  COOKIES="$CHROME/Cookies"
+  #echo ${COOKIES:-Cookies}
+
+  QUERY='select host_key, "TRUE", path, "FALSE", expires_utc, name, value from cookies'
+
+  if [[ $# == 1 ]]; then
+      domain=$1
+      QUERY="$QUERY where host_key like '$domain'"
+  fi
+
+  #echo $QUERY
+
+  # This is to make the exported cookies.txt recognizable by some libraries.
+  # e.g. http.cookiejar.MozillaCookieJar will deny it without this string... -_-//.
+  # The library does not trust the programmer but searches for this magic string..
+  echo "# Netscape HTTP Cookie File"
+  sqlite3 -separator '	' "${COOKIES:-Cookies}" "$QUERY"
+
+}
+
+
+function itermtab() {
+  osascript -e 'tell application "iTerm" to activate' -e 'tell application "System Events" to tell process "iTerm" to keystroke "t" using command down' -e 'tell application "System Events" to tell process "iTerm" to keystroke "'"$*"'"' -e 'tell application "System Events" to tell process "iTerm" to key code 52'
+  sleep 0.5
+}
+
+function itermtabremote() {
+  osascript -e 'tell application "iTerm" to activate' -e 'tell application "System Events" to tell process "iTerm" to keystroke "r" using {command down, control down}' -e 'tell application "System Events" to tell process "iTerm" to keystroke "'"$*"'"' -e 'tell application "System Events" to tell process "iTerm" to key code 52'
+  sleep 0.5
+}
+
+
+function new-alias() {
+  local last_command=$(echo `history |tail -n2 |head -n1` | sed 's/[0-9]* //')
+  echo alias $1="'""$last_command""'" >> ~/githubworkspace/dotfiles/.aliases
+  . ~/githubworkspace/dotfiles/.aliases
+}
+
+
+
+# add project to classpath
+function addtoclasspath() {
+  xmlstarlet ed --inplace -s "/classpath" -t elem -n "classpathentry" -v "" \
+    -i "//classpathentry[last()]" -t attr -n "combineaccessrules" -v "false" \
+    -i "//classpathentry[last()]" -t attr -n "kind" -v "src" \
+    -i "//classpathentry[last()]" -t attr -n "path" -v "/$1" ${2:-".classpath"}
+
+}
+
+function iterm2_print_user_vars() {
+  iterm2_set_user_var gitBranch $(__git_branch)
+}
+
+
+
+function get-elasticsearchcluster() {
+  server=${1:-"localhost:9200"}
+
+  curl -ks "http://$server/" | jq -r '.cluster_name'
+}
+
+function get-couchbasepool() {
+  server=${1:-"localhost:8091"}
+
+  curl -ks "http://$server/pools" | jq -r '.pools[0].name'
+}
+
+
+## Return PID for port
+function portpid() {
+  PID=`lsof -t -i :$1`
+  echo $PID
+}
+
+function mybranchpending {
+  echo `git status -s | wc -l`
+}
+
+function mybranch {
+  __git_ps1 "%s"
+}
+
+function __git_branch {
+  __git_ps1 "[%s]"
+}

@@ -1,0 +1,29 @@
+.ct-container {
+	margin-left: 10%;
+
+	height: 80vh;
+	width: 80vw;
+}
+
+.ct-headline {
+	font-size: 3em;
+	width: 100%;
+	text-align: center;
+	margin: 1em 0 0;
+	color: #464646;
+}
+
+.ct-background {
+	background: #D8D8D8;
+	overflow: hidden;
+}
+
+.ct-scroll {
+	padding-top: 5em;
+	overflow: auto;
+}
+
+.ct-panel {
+	background: #292929;
+	box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
+}

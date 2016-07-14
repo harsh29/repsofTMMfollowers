@@ -1,0 +1,11 @@
+Exception occured. error: value null can't be instantiated
+Exception occured. error: value null can't be instantiated
+Exception occured. error: value null can't be instantiated
+Exception occured. error: array range error!(5)the size of array is 3
+Exception occured. error: array range error!(5)the size of array is 3
+Exception occured. error: array range error!(5)the size of array is 3
+Exception occured. native_error: array range error.the size of array is 3, but position 5 is going to insert.
+Exception occured. native_error: array range error.the size of array is 3, but position 5 is going to remove.
+Exception occured. native_error: string range error.the length of string is 3, but position 5 is given.
+Exception occured. native_error: in function substr():
+	string range error.the second parameter is longer than the length of string.(5)

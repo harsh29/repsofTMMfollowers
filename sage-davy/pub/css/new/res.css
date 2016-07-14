@@ -1,0 +1,26 @@
+.sc-rc-bg2 {
+	background: url('/pub/img/bg2.jpg');
+}
+
+.sc-rc-bg3 {
+	background: url('/pub/img/bg3.jpg');
+}
+
+.sc-rc-img12 {
+	background: url('/pub/img/img12.jpg');
+}
+
+.sc-rc-img13 {
+	background: url('/pub/img/img13.jpg');
+}
+
+.sc-rc-img14 {
+	background: url('/pub/img/img14.jpg');
+}
+
+.sc-img-full-page {
+	background-color: white;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 50% 50%;
+}

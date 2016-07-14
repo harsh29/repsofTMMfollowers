@@ -1,0 +1,130 @@
+<!--
+
+    Copyright (C) 2015 Bruno Candido Volpato da Cunha (brunocvcunha@gmail.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project name="inutils4ant">
+
+
+    <macrodef name="inutils.echo">
+        <text name="message"/>
+        <sequential>
+            <var name="tstamp" unset="true"/>
+            <tstamp>
+                <format property="tstamp" pattern="dd/MM/yyyy HH:mm:ss"/>
+            </tstamp>
+
+            <echo message="[${tstamp}] @{message}"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="inutils.checksum">
+        <attribute name="file" />
+
+        <sequential>
+
+            <var name="fileHash" unset="true"/>
+            <checksum file="@{file}" property="fileHash" />
+            <inutils.echo>Fingerprint '@{file}': ${fileHash}</inutils.echo>
+
+        </sequential>
+
+    </macrodef>
+
+
+    <scriptdef language="javascript" name="inutils.upper">
+        <attribute name="string" /> 
+        <attribute name="to" />
+
+		project.setProperty( attributes.get( "to" ),
+							 attributes.get( "string" ).toUpperCase() );
+    </scriptdef>
+
+    <scriptdef language="javascript" name="inutils.lower">
+        <attribute name="string" /> 
+        <attribute name="to" />
+
+		project.setProperty( attributes.get( "to" ),
+							 attributes.get( "string" ).toLowerCase() );
+    </scriptdef>
+
+
+    <macrodef name="inutils.report.error">
+        <attribute name="consoleMessage"/>
+        <attribute name="fileMessage"/>
+
+        <sequential>
+
+            <inutils.echo>@{consoleMessage}</inutils.echo>
+            <echo file=".processerror" append="true">@{fileMessage}${line.separator}</echo>
+
+        </sequential>
+
+    </macrodef>
+
+    <macrodef name="inutils.remakedir">
+        <attribute name="dir" />
+
+        <sequential>
+            <delete dir="@{dir}" failonerror="false"/>
+            <mkdir dir="@{dir}"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="inutils.assertfileexists">
+        <attribute name="file"/>
+        <attribute name="description"/>
+        <attribute name="errorHelp" default=""/>
+        <attribute name="verbose" default="false"/>
+
+
+        <sequential>   
+            <if>
+                <equals arg1="@{verbose}" arg2="true"/>
+                <then>
+                    <inutils.echo>Checking if file '@{file}' exists...</inutils.echo>
+                </then>                
+            </if>
+
+            <if>
+                <not>
+                    <available file="@{file}"/>
+                </not>
+                <then>
+                
+                    <if>
+                        <not><equals arg1="@{errorHelp}" arg2=""/></not>
+                        <then>
+                            <inutils.echo>File Assertion failed. Help: @{errorHelp}</inutils.echo>
+                        </then>                
+                    </if>
+
+
+                    <fail message="** @{description} @{file} doesn't exist. (9879)"/> 
+                </then>                
+            </if>
+            
+            <if>
+                <equals arg1="@{verbose}" arg2="true"/>
+                <then>
+                    <inutils.echo>File Checked Successfully!</inutils.echo>
+                </then>                
+            </if>
+
+
+        </sequential>
+    </macrodef>
+
+</project>

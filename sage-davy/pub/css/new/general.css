@@ -1,0 +1,101 @@
+@import url(../../fonts/ubuntu/css/ubuntu.css);
+@import url(../../fonts/chinese-font/css/fonts.css);
+@import url(../../fonts/expletus/css/expletus.css);
+@import url(../../fonts/alegreya/css/alegreya.css);
+@import url(../../fonts/milan/css/milan.css);
+
+html, body {
+	background: #E4E3E3;
+	font-family: 'Ubuntu';
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+	font-size: 15px;
+}
+
+@media only screen and (max-width: 400px) {
+	html, body {
+		font-size: 8px;
+	}
+}
+
+@media only screen and (max-width: 480px) and (max-height: 400px) {
+	html, body {
+		font-size: 7px;
+	}
+}
+
+@media only screen and (max-width: 640px) and (max-height: 400px) {
+	html, body {
+		font-size: 8px;
+	}
+}
+
+@media only screen and (max-width: 768px) and (min-height: 640px) {
+	html, body {
+		font-size: 10px;
+	}
+}
+
+@media only screen and (max-width: 768px) and (min-height: 800px) {
+	html, body {
+		font-size: 14px;
+	}
+}
+
+br {
+	opacity: 0;
+}
+
+.sc-prehide {
+	opacity: 0;
+}
+
+.sc-hide {
+	display: none;
+}
+
+.font-tekai {
+	font-family: 'tekai', "Microsoft YaHei";
+}
+
+.font-mini-jiankai {
+	font-family: 'mini-jiankai', "Microsoft YaHei";
+}
+
+.font-ubuntu {
+	font-family: 'Ubuntu';
+}
+
+.font-baskerville {
+	font-family: 'Baskerville';
+}
+
+.font-expletus {
+	font-family: "Expletus";
+}
+
+.font-alegreya {
+	font-family: "Alegreya", sans-serif;
+	font-weight: normal;
+}
+
+.font-milan {
+	font-family: "milan", "Microsoft YaHei";
+}
+
+.font-bold {
+	font-weight: 700;
+}
+
+.font-extra-bold {
+	font-weight: 900;
+}
+
+.font-dark {
+	color: #545454;
+}
+
+.font-bright {
+	color: #E0E0E0;
+}

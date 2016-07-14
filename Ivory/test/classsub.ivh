@@ -1,0 +1,5 @@
+public interface ClassSub {
+    public void print();
+}
+
+ClassSub create_class_sub();

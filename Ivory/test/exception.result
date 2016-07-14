@@ -1,0 +1,111 @@
+sub0
+sub1
+sub2
+sub3
+sub4
+sub5
+sub6
+exception was caught.alphaalpha
+Exception occured. alphaalpha
+	at sub(exception.ivy:11)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+func2:try
+func2:finally
+func3:try
+func3:finally
+func4:try
+func4:finally
+func4:try
+func4:finally
+func4:try
+func4:finally
+sub2/0
+sub2/1
+sub2/2
+sub2/3
+sub2/4
+sub2/5
+sub2/6
+catched. count..6 messae..betabeta
+Exception occured. betabeta
+catched. count..5 messae..betabeta
+Exception occured. betabeta
+	at sub2(exception.ivy:31)
+catched. count..4 messae..betabeta
+Exception occured. betabeta
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+catched. count..3 messae..betabeta
+Exception occured. betabeta
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+catched. count..2 messae..betabeta
+Exception occured. betabeta
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+catched. count..1 messae..betabeta
+Exception occured. betabeta
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+catched. count..0 messae..betabeta
+Exception occured. betabeta
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+	at sub2(exception.ivy:31)
+sub3/0
+sub3/1
+sub3/2
+sub3/3
+sub3/4
+sub3/5
+sub3/6
+catched. count..6 messae..gammagamma
+Exception occured. gammagamma
+catched. count..5 messae..gammagamma
+Exception occured. gammagamma
+	at sub3(exception.ivy:51)
+catched. count..4 messae..gammagamma
+Exception occured. gammagamma
+	at sub3(exception.ivy:51)
+catched. count..3 messae..gammagamma
+Exception occured. gammagamma
+	at sub3(exception.ivy:51)
+catched. count..2 messae..gammagamma
+Exception occured. gammagamma
+	at sub3(exception.ivy:51)
+catched. count..1 messae..gammagamma
+Exception occured. gammagamma
+	at sub3(exception.ivy:51)
+catched. count..0 messae..gammagamma
+Exception occured. gammagamma
+	at sub3(exception.ivy:51)
+sub0
+sub1
+sub2
+sub3
+sub4
+sub5
+sub6
+Exception occured. alphaalpha
+	at sub(exception.ivy:11)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at sub(exception.ivy:13)
+	at top level(exception.ivy:106)

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<link href="../favicon.ico" rel="shortcut icon"/>
+<title>Wikifier - Convert Confluence XML to wiki markup</title>
+
+<script type="text/javascript" src="js/SaxonCE/Saxonce.nocache.js"></script>
+<script type="text/javascript" src="js/C2MD/C2MD.js"></script>
+
+<script type="text/javascript">
+// <![CDATA[
+function initialize()
+{
+wikify();
+}
+
+function keyup(e)
+{
+var keyPressed;
+
+if (window.event)
+  keyPressed = window.event.keyCode; // IE
+else
+  keyPressed = e.which; // Others
+var KEY_CODE_PASTE = 86;
+var KEY_CODE_ENTER = 13;
+if (keyPressed==KEY_CODE_ENTER || keyPressed==KEY_CODE_PASTE) wikify();
+}
+
+function wikify()
+{
+  var confluenceStorageFormatString = document.getElementById("confluencexml").value;
+  var markdownString = C2MD.transformConfluenceStorageFormatStringToMarkdownString(document, confluenceStorageFormatString);
+  document.getElementById("wikimarkup").value = markdownString;
+}
+// ]]>
+</script>
+<script type="text/javascript">
+// <![CDATA[
+	var onSaxonLoad = function() {
+		C2MD.initialize();
+		initialize();
+	};
+// ]]>
+</script>
+
+</head>
+
+<body>
+
+<p>WORK IN PROGRESS</p>
+
+<p>Based on the original <a href="http://www.amnet.net.au/~ghannington/confluence/wikifier/">Wikifier</a>.</p>
+
+<hr/>
+
+<textarea id="confluencexml" rows="25" cols="120" onkeyup="keyup(event);">&lt;h1&gt;Wikifier&lt;/h1&gt;
+&lt;p&gt;Paste your Confluence XML under the "Confluence XML" heading.&lt;/p&gt;
+&lt;p&gt;You can edit the XML, and then press Enter to refresh the wikified view.&lt;/p&gt;
+</textarea>
+
+<hr/>
+
+<textarea id="wikimarkup" rows="25" cols="120">
+</textarea>
+
+</body>
+</html>

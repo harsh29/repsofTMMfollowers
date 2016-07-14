@@ -1,0 +1,7 @@
+const a = 100;
+const b = 10;
+const c = b + 10;
+
+println("a.." + a);
+println("b.." + b);
+println("c.." + c);

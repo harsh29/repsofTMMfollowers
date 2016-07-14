@@ -1,0 +1,26 @@
+export GLOBAL_ROOT_PATH = $(shell pwd)
+export GLOBAL_LIB_PATH = $(GLOBAL_ROOT_PATH)/core
+
+export GLOBAL_LIB_SUFFIX = so
+
+export GLOBAL_CORE_STATIC_LIB_NAME = core.o
+export GLOBAL_CORE_STATIC_LIB_PATH = core/$(GLOBAL_CORE_STATIC_LIB_NAME)
+export GLOBAL_CORE_LIB_NAME = ink-core
+export GLOBAL_CORE_LIB_SONAME = lib$(GLOBAL_CORE_LIB_NAME).$(GLOBAL_LIB_SUFFIX)
+
+export GLOBAL_INSTALL_PATH = /usr
+
+ifeq ($(VERSION), release)
+	export GLOBAL_CPPFLAGS = -Wall -pedantic -DINK_INSTALL_PATH="\"$(GLOBAL_INSTALL_PATH)\"" -O3
+else
+	export GLOBAL_CPPFLAGS = -g -Wall -pedantic -DINK_INSTALL_PATH="\"$(GLOBAL_INSTALL_PATH)\"" -DINK_DEBUG_FLAG
+endif
+export GLOBAL_STATIC_CPPFLAGS = -DINK_STATIC
+
+export GLOBAL_PLATFORM_NAME = $(shell uname)
+export GLOBAL_PLATFORM =
+export GLOBAL_PLATFORM_ARCH =
+
+export ARCH_PREFIX=
+export CC=$(ARCH_PREFIX)g++
+export LD=$(ARCH_PREFIX)ld

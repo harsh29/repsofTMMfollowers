@@ -1,0 +1,13 @@
+@font-face {
+	font-family: 'tekai';
+	src: url('../fonts/tekai.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'mini-jiankai';
+	src: url('../fonts/mini-jiankai.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}

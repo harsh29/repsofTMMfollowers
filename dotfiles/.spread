@@ -1,0 +1,40 @@
+#!/bin/bash
+# Load all dotfiles
+
+# If not running interactively, don't do anything
+[[ $- == *i* ]] || return
+
+#zsh - ${(%):-%N}
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+export PATH=/usr/local/bin:$PATH
+
+export DOTFILES=$DIR
+
+source "$DIR/.exports"
+source "$DIR/.options"
+source "$DIR/.aliases"
+source "$DIR/.cheatsheets"
+
+
+## curl swag
+if hash _curlswag.sh 2>/dev/null; then
+  source "_curlswag.sh"
+fi
+
+if hash brew 2> /dev/null; then
+  source "$DIR/.complete"
+  source "$DIR/.functions"
+  source "$DIR/.totvsfunctions"
+  source "$DIR/.priv8functions"
+
+  # echo '~~ got r00t? ;-)'
+
+else
+
+  echo "Brew not installed. Ignoring a few sources."
+fi
+
+#if hash archey 2> /dev/null; then
+  #archey
+#fi

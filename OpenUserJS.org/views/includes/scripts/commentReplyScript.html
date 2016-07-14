@@ -1,0 +1,80 @@
+<script type="text/javascript">
+  (function () {
+
+    var events = 'DOMContentLoaded load resize scroll';
+    var handler = null;
+    var didCallback = false;
+
+    $('#reply-control').on('show.bs.collapse', function () {
+      // Show spacer div
+      $('#show-reply-form-when-visible').css({
+        height:
+          {{#paginationRendered}}'210px'{{/paginationRendered}}
+          {{^paginationRendered}}'268px'{{/paginationRendered}}
+      });
+    });
+
+    $('#reply-control').on('hide.bs.collapse', function () {
+      // Hide spacer div
+      $('#show-reply-form-when-visible').css({
+        height: '0'
+      });
+
+      // Clear text value from reply box
+      $('#reply-control textarea[name="comment-content"]').val('');
+    });
+
+    $('.btn-comment-reply').click(function (aE) {
+      var $comment = $(aE.target).closest('.topic-post');
+      var $author = $comment.find('.topic-meta-data .names .username').first();
+      var $replyTextarea = $('#reply-control textarea[name="comment-content"]');
+      var value = null;
+      var reUrl = null;
+
+      $('#reply-control').collapse('show');
+
+      document.location.hash = $comment.attr('id');
+
+      reUrl = document.location.pathname +
+        document.location.search +
+        document.location.hash;
+      reUrl = reUrl.replace(/\(/g, '%28').replace(/\)/g, '%29');
+
+      value = $replyTextarea.val();
+      if (!/^\s*$/.test(value)) {
+        // Add linebreaks if reply already started.
+        value += '\n\n';
+      }
+      value += '[Re](' + reUrl + '): ';
+      value += '@' + $author.text() + ': ';
+      value += '  \n';
+      $replyTextarea.val(value);
+      $replyTextarea.focus();
+    });
+
+    function callback(aEl) {
+      if (!didCallback) {
+        didCallback = true;
+
+        $('#reply-control').collapse('show');
+        $('#reply-control textarea[name="comment-content"]').focus();
+      }
+    }
+
+    {{> includes/scripts/isElementInViewport.js }}
+
+    function fireIfElementVisible(aEl, aCallback) {
+      return function () {
+        if (isElementInViewport(aEl)) {
+          $(window).off(events, handler);
+
+          aCallback(aEl);
+        }
+      }
+    }
+
+    handler = fireIfElementVisible($('#show-reply-form-when-visible'), callback);
+    $(window).on(events, handler);
+
+  })();
+</script>

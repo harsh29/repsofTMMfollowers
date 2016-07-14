@@ -1,0 +1,43 @@
+= Anypoint Connector Release Notes
+:keywords: release notes, connectors
+
+Anypoint Connectors facilitate easy integration of your Mule applications with third-party APIs and standard integration protocols. Use them within your application's flows to send and receive data via a protocol or specific API. 
+
+== Release Notes
+
+* link:/release-notes/amazon-sqs-connector-release-notes[Amazon SQS Connector Release Notes]
+* link:/release-notes/amazon-s3-connector-release-notes[Amazon S3 Connector Release Notes]
+* link:/release-notes/cloudhub-connector-release-notes[CloudHub Connector Release Notes]
+* link:/release-notes/concur-connector-release-notes[Concur Connector Release Notes]
+* link:/release-notes/dotnet-connector-release-notes[DotNet Connector Release Notes]
+* link:/release-notes/hdfs-connector-release-notes[HDFS Connector Release Notes]
+* link:/release-notes/hl7-connector-release-notes[HL7 Connector Release Notes]
+* link:/release-notes/magento-connector-release-notes[Magento Connector Release Notes]
+* link:/release-notes/marketo-connector-release-notes[Marketo Connector Release Notes]
+* link:/release-notes/microsoft-dynamics-ax-2012-connector-release-notes[Microsoft Dynamics AX 2012 Connector Release Notes]
+* link:/release-notes/microsoft-dynamics-crm-connector-release-notes[Microsoft Dynamics CRM Connector Release Notes]
+* link:/release-notes/microsoft-service-bus-connector-release-notes[Microsoft Service Bus Connector Release Notes]
+* link:/release-notes/microsoft-sharepoint-2013-connector-release-notes[Microsoft SharePoint 2013 Connector Release Notes]
+* link:/release-notes/microsoft-sharepoint-2010-connector-release-notes[Microsoft SharePoint 2010 Connector Release Notes]
+* link:/release-notes/msmq-connector-release-notes[MSMQ Connector Release Notes]
+* link:/release-notes/netsuite-connector-release-notes[NetSuite Connector Release Notes]
+* link:/release-notes/objectstore-connector-release-notes[ObjectStore Connector Release Notes]
+* link:/release-notes/oracle-e-business-suite-ebs-connector-release-notes[Oracle E-Business Suite (EBS) Connector Release Notes]
+* link:/release-notes/peoplesoft-connector-release-notes[PeopleSoft Connector Release Notes]
+* link:/release-notes/sap-connector-release-notes[SAP Connector Release Notes]
+* link:/release-notes/salesforce-connector-release-notes[Salesforce Connector Release Notes]
+* link:/release-notes/salesforce-analytics-cloud-connector-release-notes[Salesforce Analytics Cloud Connector Release Notes]
+* link:/release-notes/servicenow-connector-release-notes[ServiceNow Connector Release Notes]
+* link:/release-notes/siebel-connector-release-notes[Siebel Connector Release Notes]
+* link:/release-notes/twitter-connector-release-notes[Twitter Connector Release Notes]
+* link:/release-notes/windows-gateway-services-release-notes[Windows Gateway Services]
+* link:/release-notes/workday-connector-release-notes[Workday Connector Release Notes]
+
+'''''
+
+== See Also
+
+* link:/mule-user-guide/v/3.7/anypoint-connectors[Anypoint Connectors overview]
+* link:https://www.mulesoft.com/exchange#!/?types=connector&sortBy=name[Connector List in Anypoint Exchange] 
+* link:/anypoint-connector-devkit/v/3.7[Anypoint Connector DevKit]
+* link:http://forums.mulesoft.com/spaces/14/anypoint-connectors.html[Forums Connector Category]

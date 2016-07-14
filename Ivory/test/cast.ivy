@@ -1,0 +1,9 @@
+using Ivory.lang;
+
+class Alpha {
+}
+
+class Beta {
+}
+
+Alpha p = new Beta();

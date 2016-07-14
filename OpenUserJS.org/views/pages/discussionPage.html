@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{title}}</title>
+  {{> includes/head.html }}
+  <link rel="stylesheet" type="text/css" media="all" href="/redist/npm/bootstrap-markdown/css/bootstrap-markdown.min.css">
+  <style>
+    #show-reply-form-when-visible {
+      -moz-transition: height 1s ease;
+      -ms-transition: height 1s ease;
+      -o-transition: height 1s ease;
+      -webkit-transition: height 1s ease;
+      transition: height 1s ease;
+    }
+  </style>
+</head>
+<body>
+  {{> includes/header.html }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="container-fluid col-sm-8">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="topic-title row container-fluid">
+              <ol class="breadcrumb pull-left">
+                <li><a href="/forum">Forum</a></li>
+                <li><a href="{{{category.categoryPageUrl}}}">{{category.name}}</a></li>
+                <li class="active"><a href="{{{discussion.discussionPageUrl}}}">{{discussion.topic}}</a></li>
+              </ol>
+            </div>
+            <div class="container-fluid comments">
+              <div class="row">
+                <section class="topic-area list-group">
+                  {{#paginationRendered}}
+                  <div class="text-center collapse">
+                    {{{paginationRendered}}}
+                  </div>
+                  {{/paginationRendered}}
+                  {{#commentList}}
+                  {{> includes/comment.html }}
+                  {{/commentList}}
+                  {{#paginationRendered}}
+                  <div class="text-center">
+                    {{{paginationRendered}}}
+                  </div>
+                  {{/paginationRendered}}
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid col-sm-4">
+      </div>
+    </div>
+  </div>
+  <div id="show-reply-form-when-visible"></div>
+  {{> includes/commentForm.html }}
+  {{> includes/footer.html }}
+  {{#paginationRendered}}
+    {{> includes/scripts/showTopPagination.html }}
+  {{/paginationRendered}}
+  {{#authedUser}}
+    {{> includes/scripts/markdownEditor.html }}
+    {{> includes/scripts/commentReplyScript.html }}
+  {{/authedUser}}
+  {{^authedUser}}
+    {{> includes/scripts/commentReplyTooltip.html }}
+  {{/authedUser}}
+</body>
+</html>

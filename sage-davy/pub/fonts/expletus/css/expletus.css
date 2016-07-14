@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'Expletus';
+    src: url('../fonts/expletussans-regular-webfont.eot');
+    src: url('../fonts/expletussans-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/expletussans-regular-webfont.woff2') format('woff2'),
+         url('../fonts/expletussans-regular-webfont.woff') format('woff'),
+         url('../fonts/expletussans-regular-webfont.ttf') format('truetype'),
+         url('../fonts/expletussans-regular-webfont.svg#expletus_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Expletus';
+    src: url('../fonts/expletussans-bold-webfont.eot');
+    src: url('../fonts/expletussans-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/expletussans-bold-webfont.woff2') format('woff2'),
+         url('../fonts/expletussans-bold-webfont.woff') format('woff'),
+         url('../fonts/expletussans-bold-webfont.ttf') format('truetype'),
+         url('../fonts/expletussans-bold-webfont.svg#expletus_sansbold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
